@@ -17,3 +17,36 @@ socket.emit('lastMatch',function (match){
     jQuery('#blue2').text(blueTeams[1].replace('frc',''));
     jQuery('#blue3').text(blueTeams[2].replace('frc',''));
 });
+jQuery('#btnScaleAdd').click(function(){
+    var lastVal = jQuery('#scaleVal').text();
+    jQuery('#scaleVal').text(++lastVal);
+});
+jQuery('#btnScaleSub').click(function(){
+    var lastVal = jQuery('#scaleVal').text();
+    if(lastVal != 0){
+        jQuery('#scaleVal').text(--lastVal);
+    }
+    
+});
+jQuery('#btnNSwitchAdd').click(function(){
+    var lastVal = jQuery('#NSwitchVal').text();
+    jQuery('#NSwitchVal').text(++lastVal);
+});
+jQuery('#btnNSwitchSub').click(function(){
+    var lastVal = jQuery('#NSwitchVal').text();
+    if(lastVal != 0){
+        jQuery('#NSwitchVal').text(--lastVal);
+    }
+    
+});
+jQuery('#btnFSwitchAdd').click(function(){
+    var lastVal = jQuery('#FSwitchVal').text();
+    jQuery('#FSwitchVal').text(++lastVal);
+});
+jQuery('#btnFSwitchSub').click(function(){
+    var lastVal = jQuery('#FSwitchVal').text();
+    if(lastVal != 0){
+        jQuery('#FSwitchVal').text(--lastVal);
+    }
+    
+});

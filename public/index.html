@@ -46,7 +46,9 @@
         <div class="p-2 d-flex flex-column col-12">
             <div class="p-2 d-flex flex-row text-center justify-content-center">
                 <h1>
-                    <span class="col-12 badge badge-dark text-center">Match: M<span id="matchNumber"></span></span>
+                    <span class="col-12 badge badge-dark text-center">Match: M
+                        <span id="matchNumber"></span>
+                    </span>
                 </h1>
             </div>
             <div class="p-2 d-flex flex-row ">
@@ -99,15 +101,15 @@
             </div>
             <div class="d-flex flex-row justify-content-between flex-wrap">
                 <div class="d-flex flex-column">
-                    <button class="btn btn-danger rounded">+</button>
+                    <button class="btn btn-danger rounded" id="btnScaleAdd">+</button>
                 </div>
                 <div class="xl-flex flex-column col-3 bg-dark text-center rounded align-middle">
 
-                    <span class="align-middle text-light h1">0</span>
+                    <span class="align-middle text-light h1" id="scaleVal">0</span>
 
                 </div>
                 <div class="d-flex flex-column">
-                    <button class="btn btn-success rounded">-</button>
+                    <button class="btn btn-success rounded" id="btnScaleSub">-</button>
                 </div>
             </div>
 
@@ -118,38 +120,38 @@
             </div>
             <div class="d-flex flex-row justify-content-between flex-wrap">
                 <div class="d-flex flex-column">
-                    <button class="btn btn-danger rounded">+</button>
+                    <button class="btn btn-danger rounded" id="btnNSwitchAdd">+</button>
                 </div>
                 <div class="xl-flex flex-column col-3 bg-dark text-center rounded align-middle">
 
-                    <span class="align-middle text-light h1">0</span>
+                    <span class="align-middle text-light h1" id="NSwitchVal">0</span>
 
                 </div>
                 <div class="d-flex flex-column">
-                    <button class="btn btn-success rounded">-</button>
+                    <button class="btn btn-success rounded" id="btnNSwitchSub">-</button>
                 </div>
             </div>
 
         </div>
         <div class="d-flex md-form flex-column col-3  justify-content-start">
-                <div class="d-flex flex-row justify-content-center">
-                    <div class="card bg-warning col-12 text-center text-white h3">Far Switch</div>
-                </div>
-                <div class="d-flex flex-row justify-content-between flex-wrap">
-                    <div class="d-flex flex-column">
-                        <button class="btn btn-danger rounded">+</button>
-                    </div>
-                    <div class="xl-flex flex-column col-3 bg-dark text-center rounded align-middle">
-    
-                        <span class="align-middle text-light h1">0</span>
-    
-                    </div>
-                    <div class="d-flex flex-column">
-                        <button class="btn btn-success rounded">-</button>
-                    </div>
-                </div>
-    
+            <div class="d-flex flex-row justify-content-center">
+                <div class="card bg-warning col-12 text-center text-white h3">Far Switch</div>
             </div>
+            <div class="d-flex flex-row justify-content-between flex-wrap">
+                <div class="d-flex flex-column">
+                    <button class="btn btn-danger rounded" id="btnFSwitchAdd">+</button>
+                </div>
+                <div class="xl-flex flex-column col-3 bg-dark text-center rounded align-middle">
+
+                    <span class="align-middle text-light h1" id="FSwitchVal">0</span>
+
+                </div>
+                <div class="d-flex flex-column">
+                    <button class="btn btn-success rounded" id="btnFSwitchSub">-</button>
+                </div>
+            </div>
+
+        </div>
     </div>
     <ol id="fetchTeamsTest"></ol>
     <script src="socket.io/socket.io.js"></script>
