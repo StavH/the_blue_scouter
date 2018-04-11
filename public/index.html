@@ -46,24 +46,24 @@
         <div class="p-2 d-flex flex-column col-12">
             <div class="p-2 d-flex flex-row text-center justify-content-center">
                 <h1>
-                    <span class="col-12 badge badge-dark text-center">Match: M80</span>
+                    <span class="col-12 badge badge-dark text-center">Match: M<span id="matchNumber"></span></span>
                 </h1>
             </div>
             <div class="p-2 d-flex flex-row ">
                 <div class="p-2 d-flex flex-column">
                     <div class="p-2 d-flex flex-row">
                         <h1>
-                            <span class="badge badge-danger">1574</span>
+                            <span class="badge badge-danger" id="red1"></span>
                         </h1>
                     </div>
                     <div class="p-2 d-flex flex-row">
                         <h1>
-                            <span class="badge badge-danger chosen">1577</span>
+                            <span class="badge badge-danger chosen" id="red2"></span>
                         </h1>
                     </div>
                     <div class="p-2 d-flex flex-row">
                         <h1>
-                            <span class="badge badge-danger">1580</span>
+                            <span class="badge badge-danger" id="red3"></span>
                         </h1>
                     </div>
                 </div>
@@ -75,17 +75,17 @@
                 <div class="p-2 d-flex flex-column">
                     <div class="p-2 d-flex flex-row">
                         <h1>
-                            <span class="badge badge-primary">7039</span>
+                            <span class="badge badge-primary" id="blue1"></span>
                         </h1>
                     </div>
                     <div class="p-2 d-flex flex-row">
                         <h1>
-                            <span class="badge badge-primary">7067</span>
+                            <span class="badge badge-primary" id="blue2"></span>
                         </h1>
                     </div>
                     <div class="p-2 d-flex flex-row">
                         <h1>
-                            <span class="badge badge-primary">7112</span>
+                            <span class="badge badge-primary" id="blue3"></span>
                         </h1>
                     </div>
                 </div>
@@ -151,6 +151,10 @@
     
             </div>
     </div>
+    <ol id="fetchTeamsTest"></ol>
+    <script src="socket.io/socket.io.js"></script>
+    <script src="js/libs/jquery-3.3.1.min.js"></script>
+    <script src="/js/index.js"></script>
 </body>
 
 </html>
