@@ -20,7 +20,7 @@ updateEventSelector();
 function yearChanged() {
     updateEventSelector();
 };
+
 jQuery('#save').click(() => {
 
 });
-var fs = require('fs');

@@ -1,11 +1,16 @@
 var socket = io();
-socket.emit('fetchTeams','2018iscmp',function(teams){
+socket.emit('settings',function(obj){
+    settings = obj;
+    console.log(settings.eventKey);
+socket.emit('fetchTeams',settings.eventKey,function(teams){
     teams.forEach(team => {
         var li = jQuery('<li></li>');
         li.text(`${team.nickname} #${team.team_number}`);
         jQuery('#fetchTeamsTest').append(li);
     });
 });
+});
+
 socket.emit('lastMatch',function (match){
     var redTeams = match.alliances.red.team_keys;
     var blueTeams = match.alliances.blue.team_keys;
