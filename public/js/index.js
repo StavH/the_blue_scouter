@@ -17,6 +17,7 @@ socket.emit('lastMatch',function (match){
     jQuery('#blue2').text(blueTeams[1].replace('frc',''));
     jQuery('#blue3').text(blueTeams[2].replace('frc',''));
 });
+
 jQuery('#btnScaleAdd').click(function(){
     var lastVal = jQuery('#scaleVal').text();
     jQuery('#scaleVal').text(++lastVal);

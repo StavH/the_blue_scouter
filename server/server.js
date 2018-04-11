@@ -11,7 +11,9 @@ var server = http.createServer(app);
 var io = socketIO(server);
 
 app.use(express.static(publicPath));
-
+app.get('/settings',(req,res)=>{
+    res.sendFile(publicPath + '/settings.html')
+});
 io.on('connection', (socket) => {
     console.log('New Scouter Connected');
     socket.on('fetchTeams', (eventkey, callback) => {
@@ -40,6 +42,18 @@ io.on('connection', (socket) => {
     });
     socket.on('getTeam',(teamKey)=>{
         return 2;
+    });
+    socket.on('getEvents',(data,callback)=>{
+        console.log('hello');
+        var {year} = data;
+        
+        request({
+            url: `https://www.thebluealliance.com/api/v3/events/${year}?X-TBA-Auth-Key=lPiwFdvYHdFRwpB5nCcau29kgnGKw7CKUKsUhntbFZK3nQ8Mngfk4xaXpkz6vMu8`,
+            json: true
+        }, (error, response, body) => {            
+            callback(body);
+        });
+
     });
 });
 
