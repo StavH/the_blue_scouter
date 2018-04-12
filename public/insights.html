@@ -36,9 +36,40 @@
             </ul>
         </div>
     </nav>
+    <nav class="bg-primary col-3" style="position:absolute;height:100%;">
+        <div class="text-white">
+            <div class="md-form">
+                Year:
+                <select id="yearSelector" onchange="yearChanged()">
+                    <option>2018</option>
+                    <option>2017</option>
+                    <option>2016</option>
+                    <option>2015</option>
+                    <option>2014</option>
+                    <option>2013</option>
+                    <option>2012</option>
+                    <option>2011</option>
+                </select>
+            </div>
+            <div class="md-form">
+                Event:
+                <select id="eventSelector" class="col-9" onchange="eventChanged()">
+
+                </select>
+            </div>
+
+        </div>
+    </nav>
+    <div class="offset-3 col-9" id="teams-table" style="position: absolute; height:100%;">
+        
+    </div>
     <script src="socket.io/socket.io.js"></script>
     <script src="js/libs/jquery-3.3.1.min.js"></script>
-    <script src="/js/settings.js"></script>
+    <script src="js/libs/jquery-ui.js"></script>
+    <link rel="stylesheet" href="/css/libs/tabulator.css">
+    <script type="text/javascript" src="/js/libs/tabulator.js"></script>
+    <script src="/js/insights.js"></script>
+
 </body>
 
 </html>

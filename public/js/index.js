@@ -2,16 +2,7 @@ var socket = io();
 socket.emit('settings', function (obj) {
     settings = obj;
     console.log(settings.eventKey);
-    socket.emit('fetchTeams',{
-        key: '2018iscmp',
-        register: false
-    }, function (teams) {
-        teams.forEach(team => {
-            var li = jQuery('<li></li>');
-            li.text(`${team.nickname} #${team.team_number}`);
-            jQuery('#fetchTeamsTest').append(li);
-        });
-    });
+    
 });
 
 socket.emit('lastMatch', function (match) {

@@ -30,6 +30,9 @@ app.use(express.static(publicPath));
 app.get('/settings', (req, res) => {
     res.sendFile(publicPath + '/settings.html')
 });
+app.get('/insights', (req, res) => {
+    res.sendFile(publicPath + '/insights.html')
+});
 io.on('connection', (socket) => {
     console.log('New Scouter Connected');
     socket.on('fetchTeams', (options, callback) => {
@@ -64,22 +67,20 @@ io.on('connection', (socket) => {
                                 $push: {
                                     events: event
                                 }
-                            },(err,doc)=>{
-                                if(!err){
-                                    if(doc.nModified>0){
+                            }, (err, doc) => {
+                                if (!err) {
+                                    if (doc.nModified > 0) {
                                         console.log(team.team_number + ' registered for a new event');
-                                    }
-                                    else{
+                                    } else {
                                         console.log('No changes were made');
                                     }
-                                    
-                                }
-                                else{
+
+                                } else {
                                     console.log(error);
                                 }
                             });
                         }
-                    }).catch((err)=>{
+                    }).catch((err) => {
                         console.log(err);
                     });
 
@@ -90,6 +91,26 @@ io.on('connection', (socket) => {
         });
 
     });
+    socket.on('teams/event', (data, callback) => {
+        var {
+            key
+        } = data;
+
+        Team.find({}).then((teams) => {
+            var eTeams = [];
+            teams.forEach(team => {
+                var events = team.events;
+                if(events.filter(event => event.key == key).length > 0){
+                    
+                    eTeams.push(team);
+                }
+            });
+            
+            callback(undefined, eTeams);
+        }).catch((err) => {
+            console.log(err);
+        });
+    })
     socket.on('lastMatch', (callback) => {
         request({
             url: 'https://www.thebluealliance.com/api/v3/event/2018nyli/matches?X-TBA-Auth-Key=lPiwFdvYHdFRwpB5nCcau29kgnGKw7CKUKsUhntbFZK3nQ8Mngfk4xaXpkz6vMu8',
