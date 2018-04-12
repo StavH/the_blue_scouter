@@ -1,4 +1,3 @@
-
 var socket = io();
 var updateEventSelector = () => {
     var yearSelected = jQuery('#yearSelector').val();
@@ -17,10 +16,18 @@ var updateEventSelector = () => {
     });
 };
 updateEventSelector();
+
 function yearChanged() {
     updateEventSelector();
 };
+jQuery('#registerTeams').click(() => {
+    socket.emit('fetchTeams', {
+        key: jQuery('#eventSelector').val(),
+        register: true
+    }, (teams) => {
 
+    });
+});
 jQuery('#save').click(() => {
 
 });

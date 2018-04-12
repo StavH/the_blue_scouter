@@ -5,6 +5,13 @@ const express = require('express');
 const socketIO = require('socket.io');
 const request = require('request');
 
+const {
+    mongoose
+} = require('./db/mongoose');
+const {
+    Team
+} = require('./models/team');
+const eventKey = '2018iscmp';
 const publicPath = path.join(__dirname, '../public');
 const settingsPath = path.join(__dirname, '/configs/settings.json');
 var settings;
@@ -25,13 +32,63 @@ app.get('/settings', (req, res) => {
 });
 io.on('connection', (socket) => {
     console.log('New Scouter Connected');
-    socket.on('fetchTeams', (eventkey, callback) => {
+    socket.on('fetchTeams', (options, callback) => {
+        var event = {
+            key: options.key
+        }
+        console.log('Fetching teams for ', options.key);
         request({
-            url: `https://www.thebluealliance.com/api/v3/event/${eventkey}/teams?X-TBA-Auth-Key=lPiwFdvYHdFRwpB5nCcau29kgnGKw7CKUKsUhntbFZK3nQ8Mngfk4xaXpkz6vMu8`,
+            url: `https://www.thebluealliance.com/api/v3/event/${options.key}/teams?X-TBA-Auth-Key=lPiwFdvYHdFRwpB5nCcau29kgnGKw7CKUKsUhntbFZK3nQ8Mngfk4xaXpkz6vMu8`,
             json: true
         }, (error, response, body) => {
+            if (options.register) {
+                body.forEach(team => {
+                    Team.find({
+                        team_num: team.team_number
+                    }).then((exTeam) => {
+                        if (exTeam.length == 0) {
+                            var newTeam = Team({
+                                team_num: team.team_number,
+                                name: team.nickname
+                            });
+                            newTeam.events.push(event);
+                            newTeam.save().then(() => {
+                                console.log(team.team_number + ' Added');
+                            }).catch((e) => {
+
+                            });
+                        } else {
+                            Team.update({
+                                team_num: team.team_number
+                            }, {
+                                $push: {
+                                    events: event
+                                }
+                            },(err,doc)=>{
+                                if(!err){
+                                    if(doc.nModified>0){
+                                        console.log(team.team_number + ' registered for a new event');
+                                    }
+                                    else{
+                                        console.log('No changes were made');
+                                    }
+                                    
+                                }
+                                else{
+                                    console.log(error);
+                                }
+                            });
+                        }
+                    }).catch((err)=>{
+                        console.log(err);
+                    });
+
+                });
+            }
             callback(body);
+
         });
+
     });
     socket.on('lastMatch', (callback) => {
         request({
@@ -64,7 +121,7 @@ io.on('connection', (socket) => {
         });
 
     });
-    socket.on('settings',(callback)=>{
+    socket.on('settings', (callback) => {
         fs.readFile(settingsPath, (err, data) => {
             if (!err) {
                 settings = JSON.parse(data);
