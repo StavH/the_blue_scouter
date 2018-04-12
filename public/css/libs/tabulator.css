@@ -2,7 +2,7 @@
 .tabulator {
   position: relative;
   border: 1px solid #999;
-  background-color: #888;
+  background-color: rgb(255, 255, 255);
   font-size: 14px;
   text-align: left;
   overflow: hidden;
@@ -26,8 +26,9 @@
   box-sizing: border-box;
   width: 100%;
   border-bottom: 1px solid #999;
-  background-color: #e6e6e6;
-  color: #555;
+  /* background-color: #33b5e5; */
+  background-color:white;
+  color: rgb(255, 255, 255);
   font-weight: bold;
   white-space: nowrap;
   overflow: hidden;
@@ -42,7 +43,7 @@
   position: relative;
   box-sizing: border-box;
   border-right: 1px solid #aaa;
-  background: #e6e6e6;
+  background: #33b5e5;
   text-align: left;
   vertical-align: bottom;
   overflow: hidden;
