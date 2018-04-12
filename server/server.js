@@ -11,6 +11,9 @@ const {
 const {
     Team
 } = require('./models/team');
+const {
+    Match
+} = require('./models/match');
 const eventKey = '2018iscmp';
 const publicPath = path.join(__dirname, '../public');
 const settingsPath = path.join(__dirname, '/configs/settings.json');
@@ -100,15 +103,43 @@ io.on('connection', (socket) => {
             var eTeams = [];
             teams.forEach(team => {
                 var events = team.events;
-                if(events.filter(event => event.key == key).length > 0){
-                    
+                if (events.filter(event => event.key == key).length > 0) {
+
                     eTeams.push(team);
                 }
             });
-            
+
             callback(undefined, eTeams);
         }).catch((err) => {
             console.log(err);
+        });
+    });
+    socket.on('commitMatch', (m, callback) => {
+        console.log(m.event_key);
+        console.log(m.match_key);
+        console.log(m.team_num);
+        Match.findOne({
+            event_key: m.event_key,
+            match_key: m.match_key,
+            team_num: parseInt(m.team_num)
+        }).then((match) => {
+            console.log(match);
+            if (!match) {
+                var newMatch = new Match(m);
+                return newMatch.save().then((doc) => {
+                    callback('Match Saved!');
+                }).catch(()=>{
+                    callback('Match commit was unsuccesful');
+                });
+            }
+            console.log('match exist');
+            match.update({
+                $set: m
+            }).then(() => {
+                callback('Match Saved!');
+            }).catch(() => {
+                callback('Match commit was unsuccesful');
+            });
         });
     })
     socket.on('lastMatch', (callback) => {
