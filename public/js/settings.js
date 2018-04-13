@@ -32,15 +32,15 @@ function selYearChanged() {
 function yearChanged() {
     updateEventSelector('#yearSelector', '#eventSelector');
 };
-$('#registerTeams').click(() => {
+$('#registerTeams').click(function(){
     socket.emit('fetchTeams', {
         key: $('#eventSelector').val(),
         register: true
-    }, (teams) => {
+    }, function (teams) {
 
     });
 });
-$('#save').click(() => {
+$('#save').click(function(){
     var newSettings = {
         year: $('#year').val(),
         eventKey: $('#event').val()
