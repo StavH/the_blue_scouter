@@ -5,6 +5,7 @@ const express = require('express');
 const socketIO = require('socket.io');
 const request = require('request');
 
+const logs = require('./configs/logs');
 const {
     mongoose
 } = require('./db/mongoose');
@@ -26,11 +27,11 @@ app.use(express.static(publicPath));
 app.use((req,res,next)=>{
     const settings_config = require('./configs/settings-configs');
     settings_config.settings.then((set)=>{
-        console.log('Settings were found!');
+        logs.log('Settings were found!');
         settings= set;
         next();
     },(err)=>{
-        console.log('Error on reading settings');
+        logs.log('Error on reading settings');
         next();
     });    
 });
@@ -42,13 +43,13 @@ app.get('/insights', (req, res) => {
     res.sendFile(publicPath + '/insights.html')
 });
 io.on('connection', (socket) => {
-    console.log('New Scouter Connected');
-    console.log(settings);    
+    logs.log('New Scouter Connected');
+    logs.log(settings);    
     socket.on('fetchTeams', (options, callback) => {
         var event = {
             key: options.key
         }
-        console.log('Fetching teams for ', options.key);
+        logs.log('Fetching teams for ', options.key);
         request({
             url: `https://www.thebluealliance.com/api/v3/event/${options.key}/teams?X-TBA-Auth-Key=lPiwFdvYHdFRwpB5nCcau29kgnGKw7CKUKsUhntbFZK3nQ8Mngfk4xaXpkz6vMu8`,
             json: true
@@ -65,7 +66,7 @@ io.on('connection', (socket) => {
                             });
                             newTeam.events.push(event);
                             newTeam.save().then(() => {
-                                console.log(team.team_number + ' Added');
+                                logs.log(team.team_number + ' Added');
                             }).catch((e) => {
 
                             });
@@ -79,18 +80,18 @@ io.on('connection', (socket) => {
                             }, (err, doc) => {
                                 if (!err) {
                                     if (doc.nModified > 0) {
-                                        console.log(team.team_number + ' registered for a new event');
+                                        logs.log(team.team_number + ' registered for a new event');
                                     } else {
-                                        console.log('No changes were made');
+                                        logs.log('No changes were made');
                                     }
 
                                 } else {
-                                    console.log(error);
+                                    logs.log(error);
                                 }
                             });
                         }
                     }).catch((err) => {
-                        console.log(err);
+                        logs.log(err);
                     });
 
                 });
@@ -117,19 +118,19 @@ io.on('connection', (socket) => {
 
             callback(undefined, eTeams);
         }).catch((err) => {
-            console.log(err);
+            logs.log(err);
         });
     });
     socket.on('commitMatch', (m, callback) => {
-        console.log(settings.eventKey);
-        console.log(m.match_key);
-        console.log(m.team_num);
+        logs.log(settings.eventKey);
+        logs.log(m.match_key);
+        logs.log(m.team_num);
         Match.findOne({
             event_key: settings.eventKey,
             match_key: m.match_key,
             team_num: parseInt(m.team_num)
         }).then((match) => {
-            console.log(match);
+            logs.log(match);
             if (!match) {
                 var newMatch = new Match(m);
                 return newMatch.save().then((doc) => {
@@ -138,12 +139,14 @@ io.on('connection', (socket) => {
                     callback('Match commit was unsuccesful');
                 });
             }
-            console.log('match exist');
+            logs.log('match exist');
             match.update({
                 $set: m
             }).then(() => {
+                logs.log(`Match ${m.match_key} was saved for ${m.team_num} at ${settings.event_key}`)
                 callback('Match Saved!');
             }).catch(() => {
+                logs.log(`Match ${m.match_key}  for ${m.team_num} at ${settings.event_key} didnt commit`)
                 callback('Match commit was unsuccesful');
             });
         });
@@ -193,11 +196,11 @@ io.on('connection', (socket) => {
     socket.on('POST settings',(sets,callback) => {
         const settings_config = require('./configs/settings-configs');
         settings_config.setSettings(sets).then(()=>{
-            console.log('Settings saved');
+            logs.log('Settings saved');
             callback();
         },(err)=>{
             
-            console.log('Problam saving settings: ',err);
+            logs.log('Problam saving settings: ',err);
             callback(err);
         });
     });
@@ -206,5 +209,5 @@ io.on('connection', (socket) => {
 
 
 server.listen(port, () => {
-    console.log(`Server is listening on port ${port}`);
+    logs.log(`Server is listening on port ${port}`);
 });
