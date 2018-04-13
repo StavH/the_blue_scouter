@@ -5,8 +5,7 @@ socket.emit('settings', function (obj) {
     console.log(settings.eventKey);
 
 });
-
-socket.emit('lastMatch', function (match) {
+function setMatch (match){
     var redTeams = match.alliances.red.team_keys;
     var blueTeams = match.alliances.blue.team_keys;
     jQuery('#matchNumber').text(match.match_number);
@@ -16,6 +15,10 @@ socket.emit('lastMatch', function (match) {
     jQuery('#blue1').text(blueTeams[0].replace('frc', ''));
     jQuery('#blue2').text(blueTeams[1].replace('frc', ''));
     jQuery('#blue3').text(blueTeams[2].replace('frc', ''));
+}
+const event_key = '2018micmp1';
+socket.emit('lastMatch',function (match) {
+ setMatch(match);   
 });
 $('#red1').click(function () {
     $('#red1').addClass("chosen");
@@ -124,8 +127,23 @@ $('#btnCommit').click(function () {
         assist: $('[name="assist"]:checked').val(),
         notes: $('#notes').val()
     }
-    socket.emit('commitMatch',match, function (msg) {
+    socket.emit('commitMatch', match, function (msg) {
         window.alert(msg);
     });
 
+});
+$('#btnPrev').click(function () {
+
+    var match_key = event_key + '_qm' + ($('#matchNumber').text() - 1);
+    socket.emit('match', match_key, function (match) {
+        setMatch(match);
+    });
+});
+$('#btnNext').click(function () {
+    var  matchNumber = parseInt($('#matchNumber').text()) + 1;
+    var match_key = event_key + '_qm' + matchNumber;
+    
+    socket.emit('match', match_key, function (match) {
+        setMatch(match);
+    });
 });

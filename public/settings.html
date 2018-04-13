@@ -39,28 +39,52 @@
 
     <div class="col-10 mx-auto">
         <div class="md-form form-group">
-            Year:
-            <select id="yearSelector" onchange="yearChanged()">
-                <option>2018</option>
-                <option>2017</option>
-                <option>2016</option>
-                <option>2015</option>
-                <option>2014</option>
-                <option>2013</option>
-                <option>2012</option>
-                <option>2011</option>
-                <option>2010</option>
-            </select>
+            <h1>Current Event:</h1>
+            <div class="md-form form-group">
+                Year:
+                <select id="year" onchange="selYearChanged()">
+                        <option value="2018">2018</option>
+                        <option value="2017">2017</option>
+                        <option value="2016">2016</option>
+                        <option value="2015">2015</option>
+                        <option value="2014">2014</option>
+                        <option value="2013">2013</option>
+                        <option value="2012">2012</option>
+                        <option value="2011">2011</option>
+                        <option value="2010">2010</option>
+                </select>
+            </div>
+            <div class="md-form form-group">
+                Event:
+                <select id="event"></select>
+            </div>
         </div>
         <div class="md-form form-group">
-            Event:
-            <select id="eventSelector">
+            <h1>Register new teams for DB:</h1>
+            <div class="md-form form-group">
+                Year:
+                <select id="yearSelector" onchange="yearChanged()">
+                    <option>2018</option>
+                    <option>2017</option>
+                    <option>2016</option>
+                    <option>2015</option>
+                    <option>2014</option>
+                    <option>2013</option>
+                    <option>2012</option>
+                    <option>2011</option>
+                    <option>2010</option>
+                </select>
+            </div>
+            <div class="md-form form-group">
+                Event:
+                <select id="eventSelector">
 
-            </select>
-            <button id="registerTeams" class="btn btn-info">Register Teams</button>
-        </div>
-        <div class="md-form form-group">
-            <button class="btn btn-primary" id="save">Save Settings</button>
+                </select>
+                <button id="registerTeams" class="btn btn-info">Register Teams</button>
+            </div>
+            <div class="md-form form-group">
+                <button class="btn btn-primary" id="save">Save Settings</button>
+            </div>
         </div>
     </div>
     <script src="socket.io/socket.io.js"></script>

@@ -17,19 +17,24 @@ const {
 const eventKey = '2018iscmp';
 const publicPath = path.join(__dirname, '../public');
 const settingsPath = path.join(__dirname, '/configs/settings.json');
-var settings;
 const port = process.env.PORT || 3000;
 var app = new express();
 var server = http.createServer(app);
 var io = socketIO(server);
-fs.readFile(settingsPath, (err, data) => {
-    if (!err) {
-        settings = JSON.parse(data);
-    }
+var settings;
+app.use(express.static(publicPath));
+app.use((req,res,next)=>{
+    const settings_config = require('./configs/settings-configs');
+    settings_config.settings.then((set)=>{
+        console.log('Settings were found!');
+        settings= set;
+        next();
+    },(err)=>{
+        console.log('Error on reading settings');
+        next();
+    });    
 });
 
-
-app.use(express.static(publicPath));
 app.get('/settings', (req, res) => {
     res.sendFile(publicPath + '/settings.html')
 });
@@ -38,6 +43,7 @@ app.get('/insights', (req, res) => {
 });
 io.on('connection', (socket) => {
     console.log('New Scouter Connected');
+    console.log(settings);    
     socket.on('fetchTeams', (options, callback) => {
         var event = {
             key: options.key
@@ -115,11 +121,11 @@ io.on('connection', (socket) => {
         });
     });
     socket.on('commitMatch', (m, callback) => {
-        console.log(m.event_key);
+        console.log(settings.eventKey);
         console.log(m.match_key);
         console.log(m.team_num);
         Match.findOne({
-            event_key: m.event_key,
+            event_key: settings.eventKey,
             match_key: m.match_key,
             team_num: parseInt(m.team_num)
         }).then((match) => {
@@ -144,7 +150,7 @@ io.on('connection', (socket) => {
     })
     socket.on('lastMatch', (callback) => {
         request({
-            url: 'https://www.thebluealliance.com/api/v3/event/2018nyli/matches?X-TBA-Auth-Key=lPiwFdvYHdFRwpB5nCcau29kgnGKw7CKUKsUhntbFZK3nQ8Mngfk4xaXpkz6vMu8',
+            url: `https://www.thebluealliance.com/api/v3/event/${settings.eventKey}/matches?X-TBA-Auth-Key=lPiwFdvYHdFRwpB5nCcau29kgnGKw7CKUKsUhntbFZK3nQ8Mngfk4xaXpkz6vMu8`,
             json: true
         }, (error, response, body) => {
             var quals = body.filter(match => match.comp_level === "qm");
@@ -156,6 +162,14 @@ io.on('connection', (socket) => {
             callback(body[i]);
         });
 
+    });
+    socket.on('match',(key,callback)=>{
+        request({
+            url: `https://www.thebluealliance.com/api/v3/match/${key}?X-TBA-Auth-Key=lPiwFdvYHdFRwpB5nCcau29kgnGKw7CKUKsUhntbFZK3nQ8Mngfk4xaXpkz6vMu8`,
+            json: true
+        }, (error, response, body) => {
+            callback(body);
+        });
     });
     socket.on('getTeam', (teamKey) => {
         return 2;
@@ -174,11 +188,17 @@ io.on('connection', (socket) => {
 
     });
     socket.on('settings', (callback) => {
-        fs.readFile(settingsPath, (err, data) => {
-            if (!err) {
-                settings = JSON.parse(data);
-                callback(settings);
-            }
+        callback(settings);
+    });
+    socket.on('POST settings',(sets,callback) => {
+        const settings_config = require('./configs/settings-configs');
+        settings_config.setSettings(sets).then(()=>{
+            console.log('Settings saved');
+            callback();
+        },(err)=>{
+            
+            console.log('Problam saving settings: ',err);
+            callback(err);
         });
     });
 });
